@@ -1,9 +1,15 @@
 package it.polito.tdp.extflightdelays;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import org.jgrapht.Graphs;
+
 import it.polito.tdp.extflightdelays.model.Model;
+import it.polito.tdp.extflightdelays.model.Stampa;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,7 +34,7 @@ public class FXMLController {
     private Button btnCreaGrafo;
 
     @FXML
-    private ComboBox<?> cmbBoxStati;
+    private ComboBox<String> cmbBoxStati;
 
     @FXML
     private Button btnVisualizzaVelivoli;
@@ -44,7 +50,7 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	model.creaGrafo();
     }
 
     @FXML
@@ -54,7 +60,14 @@ public class FXMLController {
 
     @FXML
     void doVisualizzaVelivoli(ActionEvent event) {
-
+    	List<Stampa> stampa = new ArrayList<>();
+    	for(String s : Graphs.successorListOf(model.creaGrafo(), cmbBoxStati.getValue())) {
+    		Stampa stm = new Stampa (s, model.creaGrafo().getEdgeWeight(model.creaGrafo().getEdge(cmbBoxStati.getValue(), s)));
+    		stampa.add(stm);
+    	}
+    	Collections.sort(stampa);
+    	for (Stampa stm : stampa)
+    		txtResult.appendText(stm.toString()+"\n");
     }
 
     @FXML
@@ -71,5 +84,6 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		cmbBoxStati.getItems().addAll(model.loadAllStates());
 	}
 }
