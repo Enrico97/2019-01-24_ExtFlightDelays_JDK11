@@ -55,7 +55,8 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	txtResult.clear();
+    	txtResult.appendText(model.simula(Integer.parseInt(txtG.getText()), Integer.parseInt(txtT.getText()), cmbBoxStati.getValue()).toString());
     }
 
     @FXML

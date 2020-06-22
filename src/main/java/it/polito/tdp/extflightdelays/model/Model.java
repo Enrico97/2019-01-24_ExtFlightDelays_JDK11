@@ -1,6 +1,7 @@
 package it.polito.tdp.extflightdelays.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
@@ -13,6 +14,7 @@ public class Model {
 	
 	ExtFlightDelaysDAO dao = new ExtFlightDelaysDAO();
 	Graph<String, DefaultWeightedEdge> grafo;
+	Simulator s = new Simulator(this);
 	
 	public List<String> loadAllStates(){
 		return dao.loadAllStates();
@@ -23,8 +25,12 @@ public class Model {
 		Graphs.addAllVertices(grafo, dao.loadAllStates());
 		for (Adiacenza a : dao.adiacenze())
 			Graphs.addEdge(grafo, a.getS1(), a.getS2(), a.getPeso());
-		System.out.println(grafo);
 		return grafo;
+	}
+	
+	public Map<String, Integer> simula(int giorni, int persone, String partenza) {
+		s.simula(giorni, persone, partenza);
+		return s.getTuristi();
 	}
 
 }
